@@ -1,0 +1,50 @@
+{
+	"name": "@snickbit/conventional-version",
+	"version": "0.0.0",
+	"license": "MIT",
+	"main": "./dist/index.mjs",
+	"module": "./dist/index.mjs",
+	"directories": {
+		"bin": "./dist/bin"
+	},
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"build": "tsup --minify",
+		"check": "pnpm run lint && pnpm run typecheck",
+		"clean": "shx rm -rf ./dist ./bin",
+		"dev": "tsup --watch --dts --sourcemap",
+		"lint": "eslint \"**/*.{ts,json,yml,yaml}\" --cache --color",
+		"lint:fix": "pnpm run lint --fix",
+		"typecheck": "tsc --noEmit"
+	},
+	"release": {
+		"extends": [
+			"@snickbit/semantic-release"
+		]
+	},
+	"dependencies": {
+		"@snickbit/node-cli": "^3.0.24",
+		"@snickbit/node-utilities": "4.7.1",
+		"@snickbit/out": "2.0.48",
+		"@snickbit/utilities": "3.5.0",
+		"simple-git": "^3.17.0"
+	},
+	"devDependencies": {
+		"@snickbit/eslint-config": "1.4.4",
+		"@snickbit/semantic-release": "1.6.3",
+		"@types/node": "^18.14.6",
+		"eslint": "8.35.0",
+		"semantic-release": "19.0.5",
+		"shx": "0.3.4",
+		"tsup": "6.6.3",
+		"typescript": "4.9.5"
+	},
+	"engines": {
+		"node": ">= 16"
+	},
+	"publishConfig": {
+		"access": "public"
+	}
+}
