@@ -2,8 +2,9 @@
 	"name": "@snickbit/conventional-version",
 	"version": "0.0.0",
 	"license": "MIT",
-	"main": "./dist/index.mjs",
-	"module": "./dist/index.mjs",
+	"type": "module",
+	"main": "./dist/index.js",
+	"module": "./dist/index.js",
 	"directories": {
 		"bin": "./dist/bin"
 	},
@@ -14,7 +15,7 @@
 		"build": "tsup --minify",
 		"check": "pnpm run lint && pnpm run typecheck",
 		"clean": "shx rm -rf ./dist ./bin",
-		"dev": "tsup --watch --dts --sourcemap",
+		"dev": "tsup --watch",
 		"lint": "eslint \"**/*.{ts,json,yml,yaml}\" --cache --color",
 		"lint:fix": "pnpm run lint --fix",
 		"typecheck": "tsc --noEmit"

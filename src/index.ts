@@ -42,7 +42,10 @@ const defaultConfig: Config = {
 
 export type Options = Partial<Config>
 
-function parseSemver(version: string): Version {
+export type StringOptions = Omit<Options, 'asString'> & {asString: true}
+export type ObjectOptions = Omit<Options, 'asString'> & {asString: false | undefined}
+
+export function parseSemver(version: string): Version {
 	const [major, minor, patch] = version.split('.').map(Number)
 	return {major, minor, patch}
 }
@@ -75,7 +78,10 @@ interface ReleaseRule {
     type?: string
 }
 
-export default async function conventionalVersion(options?: Options): Promise<Version | string> {
+export async function conventionalVersion(options: StringOptions): Promise<string>
+export async function conventionalVersion(options: ObjectOptions): Promise<Version>
+export async function conventionalVersion(options?: Options): Promise<Version | string>
+export async function conventionalVersion(options?: Options): Promise<Version | string> {
 	const config = objectOverwrite(defaultConfig, {...options})
 
 	config.versionFile = path.isAbsolute(config.versionFile) ? config.versionFile : path.join(config.cwd, config.versionFile)

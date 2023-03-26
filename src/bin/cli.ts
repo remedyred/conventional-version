@@ -1,5 +1,5 @@
 import {out} from '@snickbit/out'
-import conventionalVersion, {Options} from '../'
+import {conventionalVersion, Options} from '../'
 import cli from '@snickbit/node-cli'
 
 cli()
