@@ -1,9 +1,9 @@
 import {defineConfig} from 'tsup'
 
 export default defineConfig({
-	// bundle: false,
 	entry: ['src/bin/*.ts', 'src/index.ts'],
 	clean: true,
+	dts: true,
 	format: ['esm'],
 	outDir: './dist',
 	esbuildOptions(options) {
