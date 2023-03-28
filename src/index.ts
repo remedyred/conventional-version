@@ -46,7 +46,11 @@ export async function conventionalVersion(options?: Options): Promise<Version | 
 	const versionFile = config.versionFile && fileExists(config.versionFile)
 		? getFileJSON(config.versionFile) : {version: '0.0.1'}
 
+	$out.debug('versionFile', versionFile)
+
 	const version = parseSemver(versionFile.version)
+
+	$out.debug('current version', version)
 
 	const findUpOptions = {
 		cwd: config.cwd,
@@ -57,8 +61,12 @@ export async function conventionalVersion(options?: Options): Promise<Version | 
         findUp('pnpm-workspace.yaml', findUpOptions) ||
         (versionFile.workspaces && versionFile.workspaces.length > 0)
 
+	$out.debug('isMonorepo', isMonorepo)
+
 	config.tagName ||= isMonorepo ? '${name}@${version}' : 'v${version}'
 	config.range ||= interpolate(config.tagName, versionFile)
+
+	$out.debug('tag range', config.range)
 
 	const tags = await gitTags(config.cwd, config.range)
 	let logs: LogResult
@@ -71,6 +79,8 @@ export async function conventionalVersion(options?: Options): Promise<Version | 
 	} else {
 		logs = await gitLog(config.cwd, tags?.latest)
 	}
+
+	$out.debug('git log count', logs.total)
 
 	incrementVersion(logs, version, config)
 
@@ -96,6 +106,7 @@ function incrementVersion(logs: LogResult, version: Version, config: Config): vo
             type.endsWith('!')
 		) {
 			bump.major = true
+			$out.debug('breaking change found, skipping rest of commits')
 			break
 		}
 
@@ -107,6 +118,9 @@ function incrementVersion(logs: LogResult, version: Version, config: Config): vo
 				if (rule.release === false) {
 					break
 				}
+
+				$out.debug('found matching release rule', rule, {type, scope})
+
 				if (isString(rule.release)) {
 					const releaseRule = safeStr(rule.release)
 
