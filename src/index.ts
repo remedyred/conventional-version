@@ -2,53 +2,18 @@ import {interpolate, isString, objectOverwrite} from '@snickbit/utilities'
 import {fileExists, findUp, getFileJSON} from '@snickbit/node-utilities'
 import {gitLog, gitTags} from './git'
 import {LogResult} from 'simple-git/dist/typings/response'
+import {
+	$out,
+	Config,
+	defaultConfig,
+	ObjectOptions,
+	Options,
+	parseSemver,
+	safeStr,
+	StringOptions,
+	Version
+} from '@/common'
 import path from 'path'
-
-export type Version = {
-    major: number
-    minor: number
-    patch: number
-}
-
-export interface Config {
-    cwd: string
-    range?: string
-    merges: boolean
-    versionFile: string
-    tagName?: string
-    asString: boolean
-    releaseRules: ReleaseRule[]
-}
-
-const defaultConfig: Config = {
-	cwd: process.cwd(),
-	merges: false,
-	versionFile: 'package.json',
-	asString: false,
-	releaseRules: [
-		{type: 'docs', scope: 'README', release: false},
-		{type: 'test', release: false},
-		{type: 'style', release: false},
-		{type: 'refactor', scope: '*', release: 'minor'},
-		{type: 'refactor', release: 'patch'},
-		{type: 'feat', release: 'minor'},
-		{type: 'fix', release: 'patch'},
-		{type: 'chore', release: 'patch'},
-		{type: 'perf', release: 'patch'},
-		{scope: 'breaking', release: 'major'},
-		{scope: 'no-release', release: false}
-	]
-}
-
-export type Options = Partial<Config>
-
-export type StringOptions = Omit<Options, 'asString'> & {asString: true}
-export type ObjectOptions = Omit<Options, 'asString'> & {asString: false | undefined}
-
-export function parseSemver(version: string): Version {
-	const [major, minor, patch] = version.split('.').map(Number)
-	return {major, minor, patch}
-}
 
 function parseCommitSubject(commitSubject: string): {type: string; scope?: string; message: string} {
 	const regex = /^(\w+!?)(\(([^)]+)\))?:\s*(.*)$/
@@ -68,14 +33,6 @@ function parseCommitSubject(commitSubject: string): {type: string; scope?: strin
 		scope: scope?.toLowerCase().trim(),
 		message: message.toLowerCase().trim()
 	}
-}
-
-const safeStr = (str: string | undefined) => String(str || '').toLowerCase()
-
-interface ReleaseRule {
-    release: boolean | 'major' | 'minor' | 'patch'
-    scope?: string
-    type?: string
 }
 
 export async function conventionalVersion(options: StringOptions): Promise<string>

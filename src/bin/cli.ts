@@ -1,5 +1,5 @@
-import {out} from '@snickbit/out'
-import {conventionalVersion, Options} from '../'
+import {conventionalVersion} from '../'
+import {$out, Options} from '@/common'
 import cli from '@snickbit/node-cli'
 
 cli()
@@ -41,5 +41,5 @@ cli()
 			asString: true
 		})
 
-		out.done(`Suggested Version: ${version}`)
+		$out.done(`Suggested Version: ${version}`)
 	})
